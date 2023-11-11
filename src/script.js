@@ -1,7 +1,7 @@
 const clientId = "12710544b2c2417d96580fe317b32b60"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
-
+async function start() {
 if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
@@ -11,6 +11,10 @@ if (!code) {
     populateUI(profile , topArtists);
     // populateUI(profile);
 }
+}
+
+start();
+
 
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
