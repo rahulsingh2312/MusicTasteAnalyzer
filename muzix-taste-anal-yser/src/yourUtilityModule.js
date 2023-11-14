@@ -1,4 +1,6 @@
 
+
+// const clientId = "12710544b2c2417d96580fe317b32b60"; 
 export async function redirectToAuthCodeFlow(clientId) {
 
     const verifier = generateCodeVerifier(128);
@@ -9,6 +11,7 @@ export async function redirectToAuthCodeFlow(clientId) {
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
+    params.append("client_secret", "abb3a3ccc0914778a812747071c0c2bd");
     params.append("response_type", "code");
     params.append("redirect_uri", "http://music-taste-analyzer.netlify.app/callback");
     params.append("scope", "user-read-private user-read-email user-top-read");
@@ -38,24 +41,55 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 
+
+
+export function getEncodedClientIdAndSecret() {
+    const clientId = "12710544b2c2417d96580fe317b32b60";
+    const clientSecret = "abb3a3ccc0914778a812747071c0c2bd";
+
+    if (!clientId || !clientSecret) {
+        throw new Error('Missing client ID or client secret');
+    }
+
+    const concatenatedString = `${clientId}:${clientSecret}`;
+    const encodedString = btoa(concatenatedString);
+
+    return `Basic ${encodedString}`;
+}
+
 export async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
-
+    const encodedAuthHeader = getEncodedClientIdAndSecret();
     const params = new URLSearchParams();
     params.append("client_id", clientId);
+    params.append("client_secret", "abb3a3ccc0914778a812747071c0c2bd");
     params.append("grant_type", "authorization_code");
     params.append("code", code);
     params.append("redirect_uri", "http://music-taste-analyzer.netlify.app/callback");
     params.append("code_verifier", verifier);
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params
-    });
+    try {
+        const result = await fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: {
+                Authorization: encodedAuthHeader,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params
+        });
 
-    const { access_token } = await result.json();
-    return access_token;
+        if (!result.ok) {
+            const errorData = await result.json();
+            console.error("Error:", result.status, result.statusText, errorData);
+            return null;
+        }
+
+        const { access_token } = await result.json();
+        return access_token;
+    } catch (error) {
+        console.error("Error during token request:", error);
+        return null;
+    }
 }
 
 

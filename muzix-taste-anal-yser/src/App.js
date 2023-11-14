@@ -1,15 +1,14 @@
 // Import necessary modules
 import React, { useState, useEffect } from 'react';
+import  './App.css';
 
-
+import Button from '../src/components/button';
 import {
   redirectToAuthCodeFlow,
   getAccessToken,
   fetchProfile,
   getTopartist
 } from './yourUtilityModule'; 
-
-
 
 
 const clientId = "12710544b2c2417d96580fe317b32b60"; 
@@ -19,16 +18,16 @@ const clientId = "12710544b2c2417d96580fe317b32b60";
 function App() {
   const [profile, setProfile] = useState(null);
   const [topArtists, setTopArtists] = useState([]);
+  const [homepage, setHomepage] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
 
-      if (!code) {
+      if (code) {
         // Redirect to Spotify authorization flow
-        redirectToAuthCodeFlow(clientId);
-      } else {
+    setHomepage(false);
         // Fetch data and update state
         const accessToken = await getAccessToken(clientId, code);
         const userProfile = await fetchProfile(accessToken);
@@ -43,11 +42,39 @@ console.log(userProfile);
     fetchData();
   }, []); // Empty dependency array ensures the effect runs once on mount
 
+  function authen(){
+
+    redirectToAuthCodeFlow(clientId);
+  
+  }
   // Render the UI
   return (
-    <div>
-      <h1>Muzix Taste Anal-yzer</h1>
-{profile && <div className="user-profile">
+    <div className='bg-gradient-to-b from-fuchsia-300 to-lime-200'>
+
+
+
+
+
+
+
+
+
+     {homepage && <section>
+      
+      <Button onClick={authen}/>
+      </section> }
+
+
+
+
+
+
+
+
+
+
+     {!homepage && <section> <h1>Muzix Taste Anal-yzer</h1>
+{profile && <div className="user-profile ">
 {profile.images && profile.images.length > 0 && (
         <img src={profile.images[1].url} alt="User" />
       )}
@@ -89,7 +116,8 @@ console.log(userProfile);
             ))}
           </ul>
         </section>}
-
+        </section> }
+            
     </div>
   );
 }
