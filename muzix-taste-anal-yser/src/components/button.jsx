@@ -5,10 +5,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 
-import justin from '../images/pngegg.png';
+import justin from '../images/iloveimg-compressed(1)/pngegg.png';
 import arctic from "../images/arctic-monkeys.png"  
-import olivia from "../images/olivia.png"
-import taylor from "../images/taylor.png"
+import olivia from "../images//iloveimg-compressed(1)/olivia.png"
+import taylor from "../images/iloveimg-compressed(1)/taylor.png"
 
 
 const Button = ({ onClick }) => {
