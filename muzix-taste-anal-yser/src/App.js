@@ -1,8 +1,10 @@
 // Import necessary modules
 import React, { useState, useEffect } from 'react';
+
+import { useSpring, animated } from 'react-spring';
 import  './App.css';
 
-import Button from '../src/components/button';
+import Landing from './components/landing';
 import {
   redirectToAuthCodeFlow,
   getAccessToken,
@@ -19,6 +21,13 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [topArtists, setTopArtists] = useState([]);
   const [homepage, setHomepage] = useState(true);
+  const animationProps = useSpring({
+    opacity: 1,
+    transform: 'translateY(0)',
+    from: { opacity: 0, transform: 'translateY(-50px)' },
+    config: { tension: 300, friction: 10 },
+  });
+
 
   useEffect(() => {
     async function fetchData() {
@@ -61,7 +70,7 @@ console.log(userProfile);
 
      {homepage && <section>
       
-      <Button onClick={authen}/>
+      <Landing onClick={authen}/>
       </section> }
 
 
@@ -72,50 +81,45 @@ console.log(userProfile);
 
 
 
-
-     {!homepage && <section> <h1>Muzix Taste Anal-yzer</h1>
-{profile && <div className="user-profile ">
+ 
+     {!homepage && <section> <div className='text-3xl Bono  p-8 justify-center flex'>Muzix Taste Anal-yzer</div>
+{profile && 
+ <animated.div style={animationProps}>
+<div className="user-profile ">
 {profile.images && profile.images.length > 0 && (
-        <img src={profile.images[1].url} alt="User" />
+      <div className='flex justify-center rounded-full '>   <img className='w-40' src={profile.images[1].url} alt="User" /> </div>
       )}
-      <div className="user-info">
-        <h1>{profile.display_name}</h1>
-        <p>Email: {profile.email}</p>
-        <p>Country: {profile.country}</p>
+      <div className="user-info flex justify-center mt-4 Bono text-2xl ">
+        <h1> hey , {profile.display_name}</h1>
+       
        {/* Check if followers exist before accessing its properties */}
-       {profile.followers && (
-              <li>Followers: {profile.followers.total}</li>
-            )}
-        {profile.external_urls && (
-              <li>
-                Spotify URI:{" "}
-                <a href={profile.external_urls.spotify}>{profile.uri}</a>
-              </li>
-            )}
+      
       </div>
-
+     
 
       
-    </div> }
-    { topArtists && <section id="topArtist">
-          <h2>Top Artists</h2>
-          <ul>
-            {topArtists.map((artist) => (
-              <li key={artist.id}>
-                <img
-                  src={artist.images[0].url}
-                  alt={artist.name}
-                  width="100"
-                  height="100"
-                />
-                <div>
-                  <h3>{artist.name}</h3>
-                  <p>Genres: {artist.genres.join(", ")}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>}
+    </div>  </animated.div>}
+    {topArtists && (
+  <section id="topArtist" style={{ overflow:'hidden', whiteSpace: 'nowrap' }}>
+    
+    <ul style={{ display: 'inline-block', margin: 0, padding: 0, listStyle: 'none',  animation: 'marquee 25s linear infinite' }}>
+      {topArtists.map((artist) => (
+        <li key={artist.id} style={{ display: 'inline-block', marginRight: '20px' }}>
+          <img
+            src={artist.images[0].url}
+            alt={artist.name}
+            width="150"
+            height="150"
+          />
+          <div>
+            <h3>{artist.name}</h3>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
         </section> }
             
     </div>
