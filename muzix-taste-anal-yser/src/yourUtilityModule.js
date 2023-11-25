@@ -13,7 +13,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("client_secret", "abb3a3ccc0914778a812747071c0c2bd");
     params.append("response_type", "code");
-    params.append("redirect_uri", "https://music-taste-analyzer.netlify.app/callback");
+    params.append("redirect_uri", "http://music-taste-analyzer.netlify.app/callback");
     params.append("scope", "user-read-private user-read-email user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -65,7 +65,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_secret", "abb3a3ccc0914778a812747071c0c2bd");
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "https://music-taste-analyzer.netlify.app/callback");
+    params.append("redirect_uri", "http://music-taste-analyzer.netlify.app/callback");
     params.append("code_verifier", verifier);
 
     try {
